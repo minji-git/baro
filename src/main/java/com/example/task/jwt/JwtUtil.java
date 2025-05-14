@@ -14,7 +14,9 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class JwtUtil {
 
@@ -29,14 +31,17 @@ public class JwtUtil {
 
 	// 토큰 생성
 	public String generateToken(String username, String role) {
+		log.info("[JwtUtil] generateToken 시작 username={}, role={}", username, role);
+
 		Date now = new Date();
 		Date expiryDate = new Date(now.getTime() + expiration);
 
 		Claims claims = Jwts.claims().setSubject(username);
-		claims.put("role", role);
+		claims.put("role", "ROLE_" + role);
 		claims.setIssuedAt(now);
 		claims.setExpiration(expiryDate);
 
+		log.info("[JwtUtil] generateToken 종료");
 		return Jwts.builder()
 			.setClaims(claims)
 			.signWith(secretKey, SignatureAlgorithm.HS256)

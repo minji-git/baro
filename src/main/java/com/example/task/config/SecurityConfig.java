@@ -10,12 +10,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.example.task.exception.CustomAccessDeniedHandler;
 import com.example.task.jwt.CustomUserDetailsService;
 import com.example.task.jwt.JwtAuthenticationFilter;
 import com.example.task.jwt.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
@@ -24,6 +27,7 @@ public class SecurityConfig {
 
 	private final JwtUtil jwtUtil;
 	private final CustomUserDetailsService customUserDetailsService;
+	private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -32,20 +36,26 @@ public class SecurityConfig {
 
 	@Bean
 	public JwtAuthenticationFilter jwtAuthenticationFilter() {
-		return new JwtAuthenticationFilter(jwtUtil, customUserDetailsService); // 변경
+		return new JwtAuthenticationFilter(jwtUtil, customUserDetailsService);
 	}
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		log.info("[SecurityConfig] 시작 ## filterChain");
+
 		http
 			.csrf().disable()
 			.authorizeHttpRequests((authz) -> authz
 				.requestMatchers("/h2-console/**", "/signup", "/login").permitAll()
+				.requestMatchers("/admin/users/**").hasRole("ADMIN")
 				.anyRequest().authenticated()
 			)
 			.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+			//.exceptionHandling(exceptionHandling ->
+			//	exceptionHandling.accessDeniedHandler(customAccessDeniedHandler))
 			.headers().frameOptions().disable();
 
+		log.info("[SecurityConfig] 종료 ## filterChain");
 		return http.build();
 	}
 }

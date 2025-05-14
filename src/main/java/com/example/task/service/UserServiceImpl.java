@@ -11,7 +11,6 @@ import com.example.task.dto.UserResponseDto;
 import com.example.task.entity.Member;
 import com.example.task.exception.InvalidCredentialsException;
 import com.example.task.exception.UserAlreadyExistsException;
-import com.example.task.exception.UserNotFoundException;
 import com.example.task.jwt.JwtUtil;
 import com.example.task.repository.UserRepository;
 
@@ -56,7 +55,8 @@ public class UserServiceImpl implements UserService {
 
 		// 1. username 유효성 검증
 		Member targetMember = userRepository.findByUsername(loginRequestDto.getUsername())
-			.orElseThrow(() -> new UserNotFoundException("회원 계정이 존재하지 않습니다."));
+//			.orElseThrow(() -> new UserNotFoundException("해당 회원 계정을 찾을 수 없습니다."));
+			.orElseThrow(() -> new InvalidCredentialsException("아이디 또는 비밀번호가 올바르지 않습니다."));
 
 		// 2. password 유효성 검증
 		log.info(">> loginRequestDto.getPassword(): {}", loginRequestDto.getPassword());
