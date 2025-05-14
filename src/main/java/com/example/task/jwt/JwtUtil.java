@@ -1,9 +1,13 @@
 package com.example.task.jwt;
 
 import java.security.Key;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
@@ -28,19 +32,20 @@ public class JwtUtil {
 		Date now = new Date();
 		Date expiryDate = new Date(now.getTime() + expiration);
 
+		Claims claims = Jwts.claims().setSubject(username);
+		claims.put("role", role);
+		claims.setIssuedAt(now);
+		claims.setExpiration(expiryDate);
+
 		return Jwts.builder()
-			.setSubject(username)
-			.claim("role", role)
-			.setIssuedAt(now)
-			.setExpiration(expiryDate)
+			.setClaims(claims)
 			.signWith(secretKey, SignatureAlgorithm.HS256)
 			.compact();
 	}
 
 	// username 추출
 	public String getUsernameFromToken(String token) {
-		Claims claims = parseToken(token);
-		return claims.getSubject();
+		return parseToken(token).getSubject();
 	}
 
 	// role 추출
@@ -67,5 +72,11 @@ public class JwtUtil {
 			.build()
 			.parseClaimsJws(token)
 			.getBody();
+	}
+
+	// 토큰에서 권한 정보 추출
+	public Collection<? extends GrantedAuthority> getAuthoritiesFromToken(String token) {
+		String role = getRoleFromToken(token);
+		return Collections.singletonList(new SimpleGrantedAuthority(role));
 	}
 }
