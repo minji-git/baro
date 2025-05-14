@@ -51,11 +51,28 @@ public class Member {
 			.build();
 	}
 
+	public static Member createAdmin(
+		String adminUsername, String adminPassword, String adminNickname
+	) {
+		return Member.builder()
+			.username(adminUsername)
+			.password(adminPassword)
+			.nickname(adminNickname)
+			.role(RoleEum.ADMIN)
+			.build();
+	}
+
 	public UserResponseDto toDto() {
 		return UserResponseDto.builder()
 			.username(username)
 			.nickname(nickname)
 			.roles(List.of(UserResponseDto.RoleResponseDto.builder().role(role.getRole()).build()))
 			.build();
+	}
+
+	public void grantAdminRole() {
+		if(!this.role.equals(RoleEum.ADMIN)) {
+			this.role = RoleEum.ADMIN;
+		}
 	}
 }

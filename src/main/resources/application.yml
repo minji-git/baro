@@ -29,6 +29,11 @@ jwt:
   access-token:
     expiration: ${ACCESS_TOKEN_EXPIRATION}
 
+admin:
+  username: ${ADMIN_USERNAME}
+  password: ${ADMIN_PASSWORD}
+  nickname: ${ADMIN_NICKNAME}
+
 logging:
   level:
     org.hibernate.sql: debug
