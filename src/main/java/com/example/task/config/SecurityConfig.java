@@ -36,7 +36,7 @@ public class SecurityConfig {
 		http
 			.authorizeHttpRequests((authz) -> authz
 				.requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
-				.requestMatchers(new AntPathRequestMatcher("/signup")).permitAll()
+				.requestMatchers("/signup", "/login").permitAll()
 				.anyRequest().authenticated()
 			)
 			.csrf().disable()

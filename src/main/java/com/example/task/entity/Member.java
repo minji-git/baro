@@ -2,13 +2,14 @@ package com.example.task.entity;
 
 import java.util.List;
 
-import com.example.task.dto.SignupRequestDto;
-import com.example.task.dto.SignupResponseDto;
+import com.example.task.dto.UserResponseDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Member {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long userId;
+
 	@Column(length = 20)
 	private String username;
 
@@ -47,11 +51,11 @@ public class Member {
 			.build();
 	}
 
-	public SignupResponseDto toDto() {
-		return SignupResponseDto.builder()
+	public UserResponseDto toDto() {
+		return UserResponseDto.builder()
 			.username(username)
 			.nickname(nickname)
-			.roles(List.of(SignupResponseDto.RoleResponseDto.builder().role(role.getRole()).build()))
+			.roles(List.of(UserResponseDto.RoleResponseDto.builder().role(role.getRole()).build()))
 			.build();
 	}
 }
