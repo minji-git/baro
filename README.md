@@ -32,8 +32,8 @@ ADMIN 권한 로그인 시에만 다른 계정 권한을 USER → ADMIN 부여�
 - Swagger UI 주소 : 배포 host/swagger-ui/index.html
 <br>
 
-## 📚 API 문서 (Swagger)
-- **Swagger**: [API 문서 링크](https://sparta-delivery-9zo.p-e.kr/swagger-ui/index.html)
+## 📚 API 문서 및 첨부파일
+- **Swagger**: [Swagger UI 링크](https://sparta-delivery-9zo.p-e.kr/swagger-ui/index.html)
 - **Postman**: [Postman Export 파일 다운](https://github.com/user-attachments/files/20220616/_Java.postman_collection.json)
 
 <br>
