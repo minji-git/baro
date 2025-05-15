@@ -6,12 +6,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.task.dto.ErrorResponseDto;
 import com.example.task.dto.LoginRequestDto;
 import com.example.task.dto.LoginResponseDto;
 import com.example.task.dto.SignupRequestDto;
 import com.example.task.dto.UserResponseDto;
-import com.example.task.exception.UserAlreadyExistsException;
 import com.example.task.service.UserServiceImpl;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,7 +29,7 @@ public class UserController {
 		log.info("[UserController] 시작 ## signup request={}", signupRequestDto);
 
 		UserResponseDto responseDto = userService.signup(signupRequestDto);
-		log.info("[AuthController] 종료 ## signup 성공");
+		log.info("[UserController] 종료 ## signup 성공");
 		return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
 	}
 
