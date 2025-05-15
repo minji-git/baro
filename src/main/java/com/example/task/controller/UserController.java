@@ -11,6 +11,7 @@ import com.example.task.dto.LoginResponseDto;
 import com.example.task.dto.SignupRequestDto;
 import com.example.task.dto.UserResponseDto;
 import com.example.task.service.UserServiceImpl;
+import com.example.task.swagger.UserSwaggerDocs;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -24,6 +25,7 @@ public class UserController {
 
 	private final UserServiceImpl userService;
 
+	@UserSwaggerDocs.PostSignup
 	@PostMapping("/signup")
 	public ResponseEntity<?> signup(@Valid @RequestBody SignupRequestDto signupRequestDto) {
 		log.info("[UserController] 시작 ## signup request={}", signupRequestDto);
@@ -33,6 +35,7 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
 	}
 
+	@UserSwaggerDocs.PostLogin
 	@PostMapping("/login")
 	public ResponseEntity<?> login(
 		@Valid @RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {

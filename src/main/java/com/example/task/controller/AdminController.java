@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.task.dto.UserResponseDto;
 import com.example.task.service.AdminService;
+import com.example.task.swagger.AdminSwaggerDocs;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +24,11 @@ public class AdminController {
 
 	private final AdminService adminService;
 
+	@AdminSwaggerDocs.PatchGrantAdminRole
 	@PatchMapping("/{userId}/roles")
 	@Secured("ROLE_ADMIN")
-	public ResponseEntity<?> grantAdminRole(@Valid @PathVariable(value = "userId") Long userId) {
+	public ResponseEntity<?> grantAdminRole(
+		@Valid @PathVariable(value = "userId") Long userId) {
 		log.info("[AdminController] 시작 ## grantAdminRole userId={}", userId);
 		UserResponseDto dto = adminService.grantAdminRole(userId);
 		log.info("[AdminController] 종료 ## grantAdminRole");
