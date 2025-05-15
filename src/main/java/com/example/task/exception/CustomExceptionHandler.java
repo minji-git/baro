@@ -19,7 +19,7 @@ public class CustomExceptionHandler {
 	@ExceptionHandler(UserAlreadyExistsException.class)
 	public ResponseEntity<ErrorResponseDto> handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
 		log.warn("중복 가입 실패: {}", ex.getMessage());
-		ErrorResponseDto errorDto = ErrorResponseDto.createErrorResponse("INVALID_CREDENTIALS", ex.getMessage());
+		ErrorResponseDto errorDto = ErrorResponseDto.createErrorResponse("USER_ALREADY_EXISTS", ex.getMessage());
 		return ResponseEntity.status(HttpStatus.CONFLICT).body(errorDto);
 	}
 
