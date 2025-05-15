@@ -14,4 +14,14 @@ public class ErrorResponseDto {
 		private String code;
 		private String message;
 	}
+
+	public static ErrorResponseDto createErrorResponse(
+		String code, String message) {
+		return ErrorResponseDto.builder()
+			.error(ErrorDetail.builder()
+				.code(code)
+				.message(message)
+				.build())
+			.build();
+	}
 }

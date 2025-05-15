@@ -2,19 +2,32 @@ package com.example.task.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.example.task.jwt.CustomUserDetailsService;
+import com.example.task.jwt.JwtAuthenticationFilter;
+import com.example.task.jwt.JwtUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(securedEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+	private final JwtUtil jwtUtil;
+	private final CustomUserDetailsService customUserDetailsService;
+	private final ObjectMapper objectMapper;
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -22,27 +35,25 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	public InMemoryUserDetailsManager userDetailsService() {
-		UserDetails user = User.builder()
-			.username("user")
-			.password(passwordEncoder().encode("password"))
-			.roles("USER")
-			.build();
-		return new InMemoryUserDetailsManager(user);
+	public JwtAuthenticationFilter jwtAuthenticationFilter() {
+		return new JwtAuthenticationFilter(jwtUtil, customUserDetailsService, objectMapper);
 	}
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		log.info("[SecurityConfig] 시작 ## filterChain");
+
 		http
+			.csrf().disable()
 			.authorizeHttpRequests((authz) -> authz
-				.requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
-				.requestMatchers(new AntPathRequestMatcher("/signup")).permitAll()
+				.requestMatchers("/h2-console/**", "/signup", "/login").permitAll()
+				.requestMatchers("/admin/users/**").hasRole("ADMIN")
 				.anyRequest().authenticated()
 			)
-			.csrf().disable()
-			.headers().frameOptions().disable()
-			;
+			.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+			.headers().frameOptions().disable();
 
+		log.info("[SecurityConfig] 종료 ## filterChain");
 		return http.build();
 	}
 }
