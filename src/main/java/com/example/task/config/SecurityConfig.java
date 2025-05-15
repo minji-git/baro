@@ -47,6 +47,7 @@ public class SecurityConfig {
 			.csrf().disable()
 			.authorizeHttpRequests((authz) -> authz
 				.requestMatchers("/h2-console/**", "/signup", "/login").permitAll()
+				.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // Swagger UI 관련 경로 허용
 				.requestMatchers("/admin/users/**").hasRole("ADMIN")
 				.anyRequest().authenticated()
 			)

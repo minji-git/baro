@@ -103,7 +103,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		// 특정 경로에 대해서는 토큰 검증 필터링 제외
 		return antPathMatcher.match("/signup", request.getServletPath()) ||
 			antPathMatcher.match("/login", request.getServletPath()) ||
-			antPathMatcher.match("/h2-console/**", request.getServletPath());
+			antPathMatcher.match("/h2-console/**", request.getServletPath()) ||
+			antPathMatcher.match("/swagger-ui/**", request.getServletPath());
 	}
 
 	private String resolveToken(HttpServletRequest request) {
