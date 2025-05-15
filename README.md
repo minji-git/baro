@@ -27,13 +27,13 @@ ADMIN 권한 로그인 시에만 다른 계정 권한을 USER → ADMIN 부여�
 6. (Swagger UI 방법만) 우측 상단 bearerAuth 클릭하여 토큰으로 로그인
 7. 관리자 권한 부여 실행(userId:2) → USER에서 ADMIN으로 변경
 
-### 배포
-- 배포 host : 
-- Swagger UI 주소 : 배포 host/swagger-ui/index.html
+### 배포(X)
+- 배포 경로(AWS EC2) : 배포 host
+- Swagger UI 주소 : http://[배포 경로]/swagger-ui/index.html
 <br>
 
 ## 📚 API 문서 및 첨부파일
-- **Swagger**: [Swagger UI 링크](https://sparta-delivery-9zo.p-e.kr/swagger-ui/index.html)
+- **Swagger**: [Swagger UI 링크](https://localhost:8080/swagger-ui/index.html)
 - **Postman**: [Postman Export 파일 다운](https://github.com/user-attachments/files/20220616/_Java.postman_collection.json)
 
 <br>
