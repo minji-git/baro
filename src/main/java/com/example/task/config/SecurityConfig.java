@@ -10,10 +10,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.example.task.exception.CustomAccessDeniedHandler;
 import com.example.task.jwt.CustomUserDetailsService;
 import com.example.task.jwt.JwtAuthenticationFilter;
 import com.example.task.jwt.JwtUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public class SecurityConfig {
 
 	private final JwtUtil jwtUtil;
 	private final CustomUserDetailsService customUserDetailsService;
-	private final CustomAccessDeniedHandler customAccessDeniedHandler;
+	private final ObjectMapper objectMapper;
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -36,7 +36,7 @@ public class SecurityConfig {
 
 	@Bean
 	public JwtAuthenticationFilter jwtAuthenticationFilter() {
-		return new JwtAuthenticationFilter(jwtUtil, customUserDetailsService);
+		return new JwtAuthenticationFilter(jwtUtil, customUserDetailsService, objectMapper);
 	}
 
 	@Bean
@@ -51,8 +51,6 @@ public class SecurityConfig {
 				.anyRequest().authenticated()
 			)
 			.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-			//.exceptionHandling(exceptionHandling ->
-			//	exceptionHandling.accessDeniedHandler(customAccessDeniedHandler))
 			.headers().frameOptions().disable();
 
 		log.info("[SecurityConfig] 종료 ## filterChain");
